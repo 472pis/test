@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <title>Document</title>
+</head>
+<style>
+    html, body{
+        width:100%;
+        height:100%;
+        margin: 0;
+        text-align: center;
+        position: relative;
+        
+    }  
+    .character{
+        margin: 0;
+        width:100px;
+        height:107px;
+        position:absolute;
+        bottom: 0;
+        left:0;
+        transition: transform 0.2s;
+        z-index: 10000000;
+    }
+    
+    .character img{
+        width:100px;
+        -webkit-user-drag:none;
+    }
+    .container{
+        width:500px;
+        height:300px;
+        background-color: beige;
+        border:1px solid black;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        display: inline-block;
+    }
+    .flipped{
+        transform: scale(-1,1);
+    }
+    .items img{
+        width:50px;
+        -webkit-user-drag:none;
+    }
+    .items{
+        position:absolute;
+        width:50px;
+    }
+    .items.noy{
+        bottom : 0;
+    }
+  .make{
+    position: relative;
+    display: inline-block;
+    width: 100px;
+    height: 50px;
+  }
+</style>
+<body>
+   <div class = 'container'>
+   <!--<div class = 'items'><img class = "a" src="item.png" alt=""></div>
+   <div class = 'itemsy'><img class = "a" src="item.png" alt=""></div>-->
+   <script>
+    //container에 객체 불러오기
+    //fetch 소환
+    fetch("load.php",{
+      method : "POST", headers:{
+        "Content-Type" : "application/json",
+        "Accept" : "application/json"
+      }, body : JSON.stringify({
+        userId:"useridname"
+      }),
+    }).then((response=>response.json())).then((data)=>{
+      var itemsPos = data["pos"];
+      //$('.container').append(JSON.stringify(data["pos"]));
+      for(var i = 0; i<itemsPos.length; i++){
+        if(itemsPos[i]["y"] == 'NULL'){
+          $('.container').append(
+            "<div class = 'items noy' name = '"+itemsPos[i]['item']+"' style='z-index:"+itemsPos[i]['zindex']+"; left:"+itemsPos[i]['x']+"px;'><img class = '"+itemsPos[i]['item']+"' src='data:image/jpeg;base64,"+itemsPos[i]['itemid']+"'/></div>");
+        }else{
+          $('.container').append(
+            "<div class = 'items havey' name = '"+itemsPos[i]['item']+"' style='z-index:"+itemsPos[i]['zindex']+"; top:"+itemsPos[i]['y']+"px; left:"+itemsPos[i]['x']+"px;'><img class = '"+itemsPos[i]['item']+"'  src='data:image/jpeg;base64,"+itemsPos[i]['itemid']+"'/></div>");
+        }//end of if
+      }//end of for
+      }).catch((error)=>console.log("error:",error));  
+   </script>
+   <div class='character'><img src="wifiwalk.gif" alt=""></div>
+   </div>
+   <div id = 'save'></div>
+   <button class = 'make'>more water</button>
+<script>
+    $(".make").on('click',function(){
+    $('.container').append("<div class = 'items havey' name = 'a' style = 'z-index:10; top:100px; left:100px'><img class = 'a' src = 'item.png'></div>");
+  });//******* dom업데이트 기능 필요함 드래그가 안됨! ********
+    var zIndex = 10;
+  window.onload = function(){
+    //로딩 끝나면 드래거블 넣어줌
+    $('.items.havey').draggable({containment:'parent'}).mousedown(function(){
+        $(this).css('z-index', zIndex);
+        zIndex++;
+    });
+    $('.items.noy').draggable({
+        containment:'parent',
+        axis:"x"
+    }).mousedown(function(){
+        $(this).css('z-index', zIndex);
+        zIndex++;
+    });
+        //캐릭터도 드래거블하게 하려면 어떻게 할까
+    //캐릭터 위에 마우스 다운 시 애니메이팅 함수 종료시켜야되겠지
+    //놓으면 바닥에 닿은 다음에 (애니메이트 추가해서) - 다시 무빙 되도록
+    //흐으으음...
+   // $('.character').draggable({containment:'parent'});
+    
+    //객체 수정 시 저장
+       $('.items').on('mouseup',function(){
+         var pos = {};
+         var i = 0;
+         $('#save').html("saving...");
+         $('.items').each(function(){
+          var x = $(this).position().left;
+           if($(this).hasClass("havey")===true){
+             var y = $(this).position().top;
+           }else{
+             var y = null;
+           }
+          var zindex = $(this).css("zIndex");
+          var item = $(this).attr("name");
+          var arr = {};
+          arr = {'x' : x, 'y' : y, 'item' : item, 'zindex' : zindex};
+          pos[i] = arr;
+          i++;
+         });//end of each
+         //여기다 저장 쑤셔넣기
+           fetch("save.php",{
+              method : "POST", 
+              headers:{
+                "Content-Type" : "application/json",
+                "Accept" : "application/json"
+              }, 
+              body : JSON.stringify({
+                userId:"useridname", pos:pos
+              }),
+            }).then((response=>response.json())).then((data)=>{
+              //console.log('success');
+              $('#save').html("");
+            }).catch((error)=>console.log("error:",error)); 
+          
+      });//end of event listener
+  };//end of onload
+    
+    //div 넓이/높이 구하기
+    var containerSizeW = $('.container').width();
+    var containerSizeH = $('.container').height();
+    var characterSizeW = $('.character').width();
+    
+    //최소값 지정 난수 - (Math.random()*max-min+1)+min
+    //난수 생성 (움직임 여부/좌표 위치)
+    function getNewrand(){
+        var moveRand = Math.floor(Math.random()*2);
+        var posRand = Math.floor(Math.random()*(containerSizeW-characterSizeW));
+        return [moveRand,posRand];
+    }
+    
+    //애니메이팅 함수
+    function animateRand(character){
+        //난수 구하고
+        var rand = getNewrand();
+        //움직임여부 오케이이면
+        if(rand[0]==0){
+            //캐릭터 이미지 걷는걸로 바꾸고
+            $(character).children().attr("src", "wifiwalk.gif");
+            //현재거리 - 도착 좌표 한 후 절대값 처리 =거리
+            var p = Math.abs($(character).position().left-rand[1])*20;
+            //현재위치보다 도착좌표가 크면 뒤집고, 작으면 원래대로
+            if($(character).position().left<rand[1]){
+                $(character).removeClass('flipped');
+            }else{
+                $(character).addClass('flipped');
+            }
+            //도착 좌표로 애나메이팅, 걸리는 시간은 거리*20으로 일정하게 유지함
+            //애니메이팅이 끝나면 애니메이팅 함수 재실행(재귀)
+            $(character).animate({left:rand[1]},p,function(){animateRand(character);});
+        }else{
+            //움직임여부 노노이면
+            //멈춤 이미지로 바꾸고
+            $(character).children().attr("src", "wifiwalk2.gif");
+            //0~2000ms까지 랜덤한 시간동안 대기
+            setTimeout(function(){animateRand(character);},Math.floor(Math.random()*2000));
+        }
+        
+    }
+    
+    //로딩완료 후 캐릭터 중앙으로 이동
+    $(document).ready(function(){
+        $('.character').animate({left:(containerSizeW/2)},0,function(){animateRand('.character');});
+    });
+  
+</script>
+</body>
+</html>

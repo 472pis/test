@@ -1,0 +1,125 @@
+<style>
+    
+    #ship_out{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        max-width: 1200px;
+        width:100%;
+        max-height: 700px;
+        height:100%;
+        overflow: hidden;
+        background-image:url(./ship.png);
+    }
+    #ship_inner{
+        max-width: 500px;
+        width:100%;
+        height: 300px;
+        max-height: 100%;
+        background-color: azure;
+        position: relative;
+    }
+    
+    .characters {
+        position: absolute;
+        bottom:0;
+    }
+    
+    .characters img{
+        height: auto;
+    }
+    
+    #ship_inner .characters img{
+        position: absolute;
+        bottom: 0;
+    }
+    
+    #chr_bt_wrap{
+        flex:0 0 auto;
+        max-width:500px;
+        width:100%;
+        transform: translate(0,-100px);
+        display: flex;
+        justify-content: space-around;
+        position: absolute;
+        bottom: 0;
+        
+    }
+    
+    .chr_bt{
+        height:80px;
+        position: relative;
+        margin: 0px 5px;
+        flex: 1;
+        background-color: aqua;
+        border-radius: 10px;
+        overflow: hidden;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .chr_bt:nth-of-type(1){
+        background-color: greenyellow;
+    }
+    
+    .chr_bt img{
+        width:200px;
+    }
+    
+    .chr_bt p{
+        padding: 0;
+        margin: 0;
+        position: absolute;
+        width:100%;
+        bottom: 0;
+        color:white;
+        font-size: 2rem;
+        font-weight: bold;
+        filter: drop-shadow(0 3px 0 black);
+        transform: rotate(-3deg);
+        transform:translate(0,50px);
+        transition: all 0.2s ease-in-out;
+    }
+    
+    .chr_bt:hover {
+        height:100px;
+    }
+    .chr_bt:hover p{
+        transform:translate(0,0px);
+    }
+
+    .middle_bt{
+        font-size: 2rem;
+        padding:1rem;
+    }
+    
+</style>
+       
+<!--배경 50퍼는 그라데이션, 그 밑에 단색 배경 넣기 -->
+<div id="ship_out">
+    <div id="ship_inner">
+            <div class="characters" id="ch_name"><img src="tes_walk.gif" alt=""></div>
+    </div>
+</div>
+<div id="chr_bt_wrap">
+    <div class="chr_bt" id="leada">
+    <img src="leada_head.png" alt=""><p>LEADA</p>
+    </div>
+    <div class="chr_bt" id="2p">
+    <img src="wifiwalk2.gif" alt=""><p>2P</p>    
+    </div>
+    <div class="chr_bt" id="hana">
+    <img src="wifiwalk2.gif" alt=""><p>HANA</p>
+    </div>
+    <div class="chr_bt" id="tes">
+    <img src="wifiwalk2.gif" alt=""><p>TES</p>
+    </div>
+</div>
+
+<div class = "middle_bt" >▼</div>
+
+<script>
+    $('.middle_bt').click(function(){
+        $('html, body').animate({
+        scrollTop:$("#main_middle_container").offset().top},500);
+    });
+</script>

@@ -1,0 +1,119 @@
+<style>
+    
+    #top_bt{
+        position: absolute;
+        top:0;
+        margin: 1rem;
+        font-size: 2rem;
+    }
+
+    
+    .maincontWrap{
+        flex:auto;
+        width:100%;
+        height:100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-top: 50px;
+        
+    }
+    #mainLogo{
+        width:50%;
+        max-width: 400px;
+        margin-bottom: 20px;
+    }
+    
+    #mainLogo img{
+        width:100%;
+        height:100%;
+    }
+    
+    .mainBt_wrap{
+        height:30px;
+        max-width: 500px;
+        width:100%;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 100px;
+    }
+    
+    .mainBt_wrap .mainBt{
+        height:100%;
+        flex:1;
+        margin: 0px 5px;
+        border:1px solid lightgray;
+        background-color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    #world{
+        position: relative;
+        width:1920px;
+        height:1920px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    #world > img:nth-child(2){
+        position:absolute;
+        top:0;
+        width:100%;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+        animation-duration: 90s;
+        animation-name:rot;
+    }
+    
+    @keyframes rot{
+        from{
+            transform: rotate(0deg);
+        }
+        to{
+            transform: rotate(-360deg);
+        }
+    }
+    
+    #world .characters{
+        position: absolute;
+        top:-50px;
+        z-index: 10;
+    }
+    
+</style>
+
+  <div id = "top_bt" >▲</div>
+  <div class="maincontWrap">
+      <div id="mainLogo"><img src="logo.png" alt=""></div>
+<div class="mainBt_wrap">
+    <div class="mainBt" id="about">about</div>
+    <div class="mainBt" id="about"><div id = "bot_bt" >gallery</div></div>
+    <div class="mainBt" id="about">characters</div>
+    <div class="mainBt" id="about">producer</div>
+</div>
+  </div>
+    <div id="world">
+        <div class="characters" id="ch_name">
+        <img src="tes_walk.gif" alt="">
+        </div>
+        <img src="world.png" alt="">
+    </div>
+    <div class="worldBt">
+       
+    </div>
+
+
+<script>
+        $('#top_bt').click(function(){
+              $('html, body').animate({
+                  scrollTop:$("#main_top_container").offset().top},500);
+           });
+        $('#bot_bt').click(function(){
+              $('html, body').animate({
+                scrollTop:$("#main_bot_container").offset().top},500);
+                });
+</script>
