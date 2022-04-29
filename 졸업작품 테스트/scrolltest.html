@@ -39,7 +39,7 @@
              $('html, body').animate({
                   scrollTop:$("#main_middle_container").offset().top},0);
             
-            $('#main_middle_container').load("/mainMiddleCont.html", function(){
+            $('#main_middle_container').load("./mainMiddleCont.html", function(){
                 $('#top_bt').click(function(){
               $('html, body').animate({
                   scrollTop:$("#main_top_container").offset().top},500);
@@ -52,7 +52,7 @@
            
             });
             
-            $('#main_top_container').load("/spaceship.html", function(){
+            $('#main_top_container').load("./spaceship.html", function(){
                 $('.middle_bt').click(function(){
                     $('html, body').animate({
                   scrollTop:$("#main_middle_container").offset().top},500);
